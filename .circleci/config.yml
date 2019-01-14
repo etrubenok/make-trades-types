@@ -20,6 +20,10 @@ jobs: # basic units of work in a run
             - v1-pkg-cache
 
       - run:
+          name: Download dependencies
+          command: dep ensure
+
+      - run:
           name: Run unit tests
           command: go test ./...
 
