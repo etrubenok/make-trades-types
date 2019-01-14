@@ -1,0 +1,23 @@
+{
+    "exchange": "binance",
+    "stream": "btcusdt@trade",
+    "symbol": "btcusdt",
+    "event_time": 1547119839773,
+    "received_time": 1547119839859,
+    "raw_message": {
+        "data": {
+            "E": 1547119839773,
+            "M": true,
+            "T": 1547119839766,
+            "a": 229900109,
+            "b": 229900117,
+            "e": "trade",
+            "m": false,
+            "p": "3738.35000000",
+            "q": "0.00280900",
+            "s": "BTCUSDT",
+            "t": 93684015
+        },
+        "stream": "btcusdt@trade"
+    }
+}
