@@ -38,3 +38,9 @@ jobs: # basic units of work in a run
 
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: /tmp/test-results
+
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            git tag -a 0.1.${CIRCLE_BUILD_NUM}
+            git push --tags
