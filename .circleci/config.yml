@@ -47,6 +47,4 @@ jobs: # basic units of work in a run
             git config user.email "etrubenok@gmail.com"
             git config user.name "etrubenok"     
             git tag -a 0.1.${CIRCLE_BUILD_NUM} -m "Tag 0.1.${CIRCLE_BUILD_NUM}"
-            git status
-            ls -la
             git push --tags
