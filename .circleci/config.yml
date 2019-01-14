@@ -5,7 +5,7 @@ jobs: # basic units of work in a run
       # CircleCI Go images available at: https://hub.docker.com/r/circleci/golang/
       - image: circleci/golang:1.11.4 #
     # directory where steps are run. Path must conform to the Go Workspace requirements
-    working_directory: /go/src/github.com/etrubenok
+    working_directory: /go/src/github.com/etrubenok/make-trades-types
 
     environment: # environment variables for the build itself
       TEST_RESULTS: /tmp/test-results # path to where test results will be saved
@@ -42,5 +42,9 @@ jobs: # basic units of work in a run
       - run:
           name: "Publish Release on GitHub"
           command: |
+            # Push changes
+            git config credential.helper 'cache --timeout=120'
+            git config user.email "etrubenok@gmail.com"
+            git config user.name "etrubenok"     
             git tag -a 0.1.${CIRCLE_BUILD_NUM}
             git push --tags
