@@ -1,9 +1,12 @@
 package types
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"testing"
 
+	"github.com/etrubenok/make-trades-types/binance"
+	"github.com/etrubenok/make-trades-types/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -56,5 +59,32 @@ func TestGetExchangeInvalid(t *testing.T) {
 	_, err = GetExchange(&msg)
 	if assert.Error(t, err) {
 		assert.Equal(t, err.Error()[:43], "GetExchange: cannot get 'exchange' from msg")
+	}
+}
+
+func TestKafkaBinanceTradeToAPITrade(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./binance/test-data/binance-trade-in-kafka.json")
+	assert.NoError(t, err)
+
+	binanceTradeInKafka := binance.TradeStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &binanceTradeInKafka)
+	assert.NoError(t, err)
+
+	expectedAPITrade := types.APITrade{
+		Exchange:      "binance",
+		Symbol:        "binance-bchsvusdt",
+		Received:      1548817264969,
+		TradeID:       4168042,
+		EventTime:     1548817264887,
+		TradeTime:     1548817264883,
+		MarketMaker:   true,
+		SellerOrderID: 18779843,
+		BuyerOrderID:  18779842,
+		Price:         "63.70000000",
+		Quantity:      "0.16400000"}
+
+	apiTrade, err := KafkaBinanceTradeToAPITrade(&binanceTradeInKafka)
+	if assert.NoError(t, err) {
+		assert.Equal(t, &expectedAPITrade, apiTrade)
 	}
 }

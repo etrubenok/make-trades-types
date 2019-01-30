@@ -1,0 +1,23 @@
+{
+    "exchange": "binance",
+    "stream": "bchsvusdt@trade",
+    "symbol": "bchsvusdt",
+    "event_time": 1548817264887,
+    "received_time": 1548817264969,
+    "raw_message": {
+        "data": {
+            "E": 1548817264887,
+            "M": true,
+            "T": 1548817264883,
+            "a": 18779843,
+            "b": 18779842,
+            "e": "trade",
+            "m": true,
+            "p": "63.70000000",
+            "q": "0.16400000",
+            "s": "BCHSVUSDT",
+            "t": 4168042
+        },
+        "stream": "bchsvusdt@trade"
+    }
+}

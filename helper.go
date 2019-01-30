@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/etrubenok/make-trades-types/binance"
+	"github.com/etrubenok/make-trades-types/types"
 	"github.com/golang/glog"
 )
 
@@ -44,4 +46,22 @@ func GetExchange(msg *map[string]interface{}) (string, error) {
 		return "", fmt.Errorf("GetExchange: cannot get 'exchange' from msg %v", msg)
 	}
 	return e, nil
+}
+
+// KafkaBinanceTradeToAPITrade converts binance trade from Kafka message to APITrade format
+func KafkaBinanceTradeToAPITrade(kafkaTrade *binance.TradeStreamMessageInKafka) (*types.APITrade, error) {
+
+	apiTrade := types.APITrade{
+		Exchange:      kafkaTrade.Exchange,
+		Symbol:        fmt.Sprintf("%s-%s", kafkaTrade.Exchange, kafkaTrade.Symbol),
+		Received:      kafkaTrade.ReceivedTime,
+		TradeID:       kafkaTrade.RawMessage.Data.LowercaseT,
+		EventTime:     kafkaTrade.RawMessage.Data.E,
+		TradeTime:     kafkaTrade.RawMessage.Data.T,
+		MarketMaker:   kafkaTrade.RawMessage.Data.LowercaseM,
+		SellerOrderID: kafkaTrade.RawMessage.Data.LowercaseA,
+		BuyerOrderID:  kafkaTrade.RawMessage.Data.LowercaseB,
+		Price:         kafkaTrade.RawMessage.Data.LowercaseP,
+		Quantity:      kafkaTrade.RawMessage.Data.LowercaseQ}
+	return &apiTrade, nil
 }
