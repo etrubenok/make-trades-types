@@ -4,12 +4,24 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"strings"
 
 	"github.com/etrubenok/make-trades-types/binance"
 	"github.com/etrubenok/make-trades-types/types"
 	"github.com/golang/glog"
 )
+
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+// RandStringBytes generates a random string with a given length
+func RandStringBytes(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
+}
 
 // ConvertToJSON converts string to JSON struct
 func ConvertToJSON(message string) (map[string]interface{}, error) {

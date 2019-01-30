@@ -88,3 +88,8 @@ func TestKafkaBinanceTradeToAPITrade(t *testing.T) {
 		assert.Equal(t, &expectedAPITrade, apiTrade)
 	}
 }
+
+func TestRandStringBytes(t *testing.T) {
+	str := RandStringBytes(10)
+	assert.Equal(t, 10, len(str))
+}
