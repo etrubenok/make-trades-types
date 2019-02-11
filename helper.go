@@ -12,7 +12,7 @@ import (
 	"github.com/golang/glog"
 )
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 // RandStringBytes generates a random string with a given length
 func RandStringBytes(n int) string {
