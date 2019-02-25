@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 
+	bitfinex "github.com/bitfinexcom/bitfinex-api-go/v2"
+	"github.com/etrubenok/make-trades-types/types"
 	"github.com/golang/glog"
 )
 
@@ -62,4 +64,61 @@ func GetKeyHash(key string) (string, error) {
 	}
 	bs := h.Sum(nil)
 	return fmt.Sprintf("%x", bs), nil
+}
+
+// KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate converts Bitfinex depth stream message into APIOrderBookUpdate format
+func KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(kafkaDepth *DepthStreamMessageInKafka) (*types.APIOrderBookUpdate, error) {
+	bids := make([]types.APIOrderBookPriceLevel, 0)
+	asks := make([]types.APIOrderBookPriceLevel, 0)
+	if kafkaDepth.RawMessage.Side == bitfinex.Bid {
+		if kafkaDepth.RawMessage.Count == 0 {
+			bids = append(bids, types.APIOrderBookPriceLevel{
+				Price:    fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Price),
+				Quantity: fmt.Sprintf("%.8f", 0.0)})
+		} else {
+			bids = append(bids, types.APIOrderBookPriceLevel{
+				Price:    fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Price),
+				Quantity: fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Amount)})
+		}
+	} else if kafkaDepth.RawMessage.Side == bitfinex.Ask {
+		if kafkaDepth.RawMessage.Count == 0 {
+			asks = append(asks, types.APIOrderBookPriceLevel{
+				Price:    fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Price),
+				Quantity: fmt.Sprintf("%.8f", 0.0)})
+		} else {
+			asks = append(asks, types.APIOrderBookPriceLevel{
+				Price:    fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Price),
+				Quantity: fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Amount)})
+		}
+	}
+
+	apiOrderBookUpdate := types.APIOrderBookUpdate{
+		Exchange:      kafkaDepth.Exchange,
+		Symbol:        fmt.Sprintf("%s-%s", kafkaDepth.Exchange, kafkaDepth.Symbol),
+		Received:      kafkaDepth.ReceivedTime,
+		FirstUpdateID: kafkaDepth.RawMessage.ID,
+		EventTime:     kafkaDepth.EventTime,
+		LastUpdateID:  kafkaDepth.RawMessage.ID,
+		Asks:          asks,
+		Bids:          bids,
+	}
+	return &apiOrderBookUpdate, nil
+}
+
+// KafkaBitfinexTradeToAPITrade converts binance trade from Kafka message to APITrade format
+func KafkaBitfinexTradeToAPITrade(kafkaTrade *TradeStreamMessageInKafka) (*types.APITrade, error) {
+
+	apiTrade := types.APITrade{
+		Exchange:      kafkaTrade.Exchange,
+		Symbol:        fmt.Sprintf("%s-%s", kafkaTrade.Exchange, kafkaTrade.Symbol),
+		Received:      kafkaTrade.ReceivedTime,
+		TradeID:       kafkaTrade.RawMessage.ID,
+		EventTime:     kafkaTrade.RawMessage.MTS,
+		TradeTime:     kafkaTrade.RawMessage.MTS,
+		MarketMaker:   false,
+		SellerOrderID: -1,
+		BuyerOrderID:  -1,
+		Price:         fmt.Sprintf("%.8f", kafkaTrade.RawMessage.Price),
+		Quantity:      fmt.Sprintf("%.8f", kafkaTrade.RawMessage.Amount)}
+	return &apiTrade, nil
 }

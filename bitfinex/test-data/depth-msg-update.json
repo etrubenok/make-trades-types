@@ -1,0 +1,18 @@
+{
+  "exchange": "bitfinex",
+  "stream": "tEOSUSD@depth",
+  "symbol": "tEOSUSD",
+  "event_time": 1551096530408,
+  "received_time": 1551096530408,
+  "raw_message": {
+    "ID": 0,
+    "Price": 3.4531,
+    "PriceJsNum": "3.4531",
+    "Side": 1,
+    "Count": 1,
+    "Action": 0,
+    "Symbol": "tEOSUSD",
+    "Amount": 1300,
+    "AmountJsNum": "1300"
+  }
+}
