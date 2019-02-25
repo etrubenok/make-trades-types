@@ -94,6 +94,7 @@ func KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(kafkaDepth *DepthStreamMes
 
 	apiOrderBookUpdate := types.APIOrderBookUpdate{
 		Exchange:      kafkaDepth.Exchange,
+		Type:          "orderbook",
 		Symbol:        fmt.Sprintf("%s-%s", kafkaDepth.Exchange, kafkaDepth.Symbol),
 		Received:      kafkaDepth.ReceivedTime,
 		FirstUpdateID: kafkaDepth.RawMessage.ID,
@@ -110,6 +111,7 @@ func KafkaBitfinexTradeToAPITrade(kafkaTrade *TradeStreamMessageInKafka) (*types
 
 	apiTrade := types.APITrade{
 		Exchange:      kafkaTrade.Exchange,
+		Type:          "trade",
 		Symbol:        fmt.Sprintf("%s-%s", kafkaTrade.Exchange, kafkaTrade.Symbol),
 		Received:      kafkaTrade.ReceivedTime,
 		TradeID:       kafkaTrade.RawMessage.ID,

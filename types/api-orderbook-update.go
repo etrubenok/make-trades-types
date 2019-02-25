@@ -9,6 +9,7 @@ type APIOrderBookPriceLevel struct {
 // APIOrderBookUpdate type represents API messages for order book updates
 type APIOrderBookUpdate struct {
 	Exchange      string                   `json:"exchange"`
+	Type          string                   `json:"type"`
 	Symbol        string                   `json:"symbol"`
 	Received      int64                    `json:"received_time"`
 	FirstUpdateID int64                    `json:"first_update_id"`

@@ -70,6 +70,7 @@ func KafkaBinanceTradeToAPITrade(kafkaTrade *TradeStreamMessageInKafka) (*types.
 
 	apiTrade := types.APITrade{
 		Exchange:      kafkaTrade.Exchange,
+		Type:          "trade",
 		Symbol:        fmt.Sprintf("%s-%s", kafkaTrade.Exchange, kafkaTrade.Symbol),
 		Received:      kafkaTrade.ReceivedTime,
 		TradeID:       kafkaTrade.RawMessage.Data.LowercaseT,
@@ -112,6 +113,7 @@ func KafkaBinanceOrderBookUpdateToAPIOrderBookUpdate(kafkaDepth *DepthStreamMess
 
 	apiOrderBookUpdate := types.APIOrderBookUpdate{
 		Exchange:      kafkaDepth.Exchange,
+		Type:          "orderbook",
 		Symbol:        fmt.Sprintf("%s-%s", kafkaDepth.Exchange, kafkaDepth.Symbol),
 		Received:      kafkaDepth.ReceivedTime,
 		FirstUpdateID: kafkaDepth.RawMessage.Data.U,

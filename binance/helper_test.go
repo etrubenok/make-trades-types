@@ -72,6 +72,7 @@ func TestKafkaBinanceTradeToAPITrade(t *testing.T) {
 
 	expectedAPITrade := types.APITrade{
 		Exchange:      "binance",
+		Type:          "trade",
 		Symbol:        "binance-bchsvusdt",
 		Received:      1548817264969,
 		TradeID:       4168042,
@@ -99,6 +100,7 @@ func TestKafkaBinanceOrderBookUpdateToAPIOrderBookUpdate(t *testing.T) {
 
 	expectedAPIOrderBookUpdate := types.APIOrderBookUpdate{
 		Exchange:      "binance",
+		Type:          "orderbook",
 		Symbol:        "binance-ethusdt",
 		Received:      1547291078868,
 		FirstUpdateID: 268315354,

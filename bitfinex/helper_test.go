@@ -47,6 +47,7 @@ func TestKafkaBitfinexOrderBookUpdateToAPIOrderBook(t *testing.T) {
 
 	expectedAPIOrderBookUpdate := types.APIOrderBookUpdate{
 		Exchange:      "bitfinex",
+		Type:          "orderbook",
 		Symbol:        "bitfinex-tEOSUSD",
 		Received:      1551070004436,
 		FirstUpdateID: 0,
@@ -71,6 +72,7 @@ func TestKafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(t *testing.T) {
 
 	expectedAPIOrderBookUpdate := types.APIOrderBookUpdate{
 		Exchange:      "bitfinex",
+		Type:          "orderbook",
 		Symbol:        "bitfinex-tEOSUSD",
 		Received:      1551096530408,
 		FirstUpdateID: 0,
@@ -95,7 +97,8 @@ func TestKafkaBitfinexTradeToAPITrade(t *testing.T) {
 
 	expectedAPITrade := types.APITrade{
 		Exchange:      "bitfinex",
-		Symbol:        "bitfinex-btcusd",
+		Type:          "trade",
+		Symbol:        "bitfinex-tEOSUSD",
 		Received:      1547119839859,
 		TradeID:       340528434,
 		EventTime:     1551071701829,

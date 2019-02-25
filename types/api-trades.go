@@ -3,6 +3,7 @@ package types
 // APITrade type represents trade we expose via maketrades API
 type APITrade struct {
 	Exchange      string `json:"exchange"`
+	Type          string `json:"type"`
 	Symbol        string `json:"symbol"`
 	Received      int64  `json:"received_time"`
 	TradeID       int64  `json:"trade_id"`

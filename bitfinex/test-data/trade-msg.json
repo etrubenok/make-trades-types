@@ -1,7 +1,7 @@
 {
   "exchange": "bitfinex",
-  "stream": "btcusd@trade",
-  "symbol": "btcusd",
+  "stream": "tEOSUSD@trade",
+  "symbol": "tEOSUSD",
   "event_time": 1547119839773,
   "received_time": 1547119839859,
   "raw_message": {
