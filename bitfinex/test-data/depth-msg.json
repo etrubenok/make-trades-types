@@ -1,0 +1,18 @@
+{
+  "exchange": "bitfinex",
+  "stream": "eosusd@depth",
+  "symbol": "eosusd",
+  "event_time": 1551070004436,
+  "received_time": 1551070004436,
+  "raw_message": {
+    "ID": 22744137175,
+    "Price": 3.7475,
+    "PriceJsNum": "3.7475",
+    "Side": 2,
+    "Count": 0,
+    "Action": 0,
+    "Symbol": "tEOSUSD",
+    "Amount": 218.84835729,
+    "AmountJsNum": "-218.84835729"
+  }
+}

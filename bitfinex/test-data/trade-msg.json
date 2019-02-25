@@ -1,0 +1,15 @@
+{
+  "exchange": "bitfinex",
+  "stream": "btcusd@trade",
+  "symbol": "btcusd",
+  "event_time": 1547119839773,
+  "received_time": 1547119839859,
+  "raw_message": {
+    "ID": 340528434,
+    "MTS": 1551071701829,
+    "Amount": 26.57,
+    "Price": 3.6751,
+    "Side": 2,
+    "Pair": "tEOSUSD"
+  }
+}
