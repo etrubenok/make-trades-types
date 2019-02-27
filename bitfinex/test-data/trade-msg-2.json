@@ -1,0 +1,15 @@
+{
+    "exchange": "bitfinex",
+    "stream": "tLTCBTC@trade",
+    "symbol": "tLTCBTC",
+    "event_time": 1551267619093,
+    "received_time": 1551267619178,
+    "raw_message": {
+        "Amount": 7.89520029,
+        "ID": 340960930,
+        "MTS": 1551267619093,
+        "Pair": "tLTCBTC",
+        "Price": 0.011798,
+        "Side": 1
+    }
+}

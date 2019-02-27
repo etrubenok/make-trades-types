@@ -19,6 +19,7 @@ func TestGetTradeStreamMessage(t *testing.T) {
 		assert.Equal(t, "bitfinex", msg.Exchange)
 		assert.Equal(t, 26.57, msg.RawMessage.Amount)
 		assert.Equal(t, 3.6751, msg.RawMessage.Price)
+		assert.Equal(t, bitfinexOrig.Ask, msg.RawMessage.Side)
 	}
 }
 
@@ -87,6 +88,55 @@ func TestKafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(t *testing.T) {
 	}
 }
 
+func TestKafkaBitfinexOrderBookUpdateToAPIOrderBookUpdateExp(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./test-data/depth-msg-price-exp.json")
+	assert.NoError(t, err)
+
+	bitfinexDepthUpdateInKafka := DepthStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
+	assert.NoError(t, err)
+
+	expectedAPIOrderBookUpdate := types.APIOrderBookUpdate{
+		Exchange:      "bitfinex",
+		Type:          "orderbook",
+		Symbol:        "bitfinex-tBATBTC",
+		Received:      1551267404491,
+		FirstUpdateID: 0,
+		EventTime:     1551267404491,
+		LastUpdateID:  0,
+		Asks:          []types.APIOrderBookPriceLevel{},
+		Bids:          []types.APIOrderBookPriceLevel{types.APIOrderBookPriceLevel{Price: "0.00000010", Quantity: "51200.00000000"}}}
+
+	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka)
+	if assert.NoError(t, err) {
+		assert.Equal(t, &expectedAPIOrderBookUpdate, apiOrdeBookUpdate)
+	}
+}
+
+func TestKafkaBitfinexOrderBookUpdateToAPIOrderBookUpdateAsk(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./test-data/depth-msg-ask.json")
+	assert.NoError(t, err)
+
+	bitfinexDepthUpdateInKafka := DepthStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
+	assert.NoError(t, err)
+
+	expectedAPIOrderBookUpdate := types.APIOrderBookUpdate{
+		Exchange:      "bitfinex",
+		Type:          "orderbook",
+		Symbol:        "bitfinex-tZECBTC",
+		Received:      1551267598182,
+		FirstUpdateID: 0,
+		EventTime:     1551267598182,
+		LastUpdateID:  0,
+		Asks:          []types.APIOrderBookPriceLevel{types.APIOrderBookPriceLevel{Price: "0.01364400", Quantity: "3.99030282"}},
+		Bids:          []types.APIOrderBookPriceLevel{}}
+
+	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka)
+	if assert.NoError(t, err) {
+		assert.Equal(t, &expectedAPIOrderBookUpdate, apiOrdeBookUpdate)
+	}
+}
 func TestKafkaBitfinexTradeToAPITrade(t *testing.T) {
 	msgStr, err := ioutil.ReadFile("./test-data/trade-msg.json")
 	assert.NoError(t, err)
@@ -107,10 +157,64 @@ func TestKafkaBitfinexTradeToAPITrade(t *testing.T) {
 		SellerOrderID: -1,
 		BuyerOrderID:  -1,
 		Price:         "3.67510000",
-		Quantity:      "26.57000000"}
+		Quantity:      "26.57000000",
+		Side:          -1}
 
 	apiTrade, err := KafkaBitfinexTradeToAPITrade(&bitfinexTradeInKafka)
 	if assert.NoError(t, err) {
 		assert.Equal(t, &expectedAPITrade, apiTrade)
 	}
+}
+
+func TestKafkaBitfinexTradeToAPITrade2(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./test-data/trade-msg-2.json")
+	assert.NoError(t, err)
+
+	bitfinexTradeInKafka := TradeStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexTradeInKafka)
+	assert.NoError(t, err)
+
+	expectedAPITrade := types.APITrade{
+		Exchange:      "bitfinex",
+		Type:          "trade",
+		Symbol:        "bitfinex-tLTCBTC",
+		Received:      1551267619178,
+		TradeID:       340960930,
+		EventTime:     1551267619093,
+		TradeTime:     1551267619093,
+		MarketMaker:   false,
+		SellerOrderID: -1,
+		BuyerOrderID:  -1,
+		Price:         "0.01179800",
+		Quantity:      "7.89520029",
+		Side:          1}
+
+	apiTrade, err := KafkaBitfinexTradeToAPITrade(&bitfinexTradeInKafka)
+	if assert.NoError(t, err) {
+		assert.Equal(t, &expectedAPITrade, apiTrade)
+	}
+}
+
+func TestGetDepthMessagePrimaryKey(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./test-data/depth-msg-ask.json")
+	assert.NoError(t, err)
+
+	bitfinexDepthUpdateInKafka := DepthStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "bitfinex@tZECBTC@depth@1551267598182@0@3.99030282@4@0.01364400@2",
+		GetDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
+}
+
+func TestGetDepthMessagePrimaryKeyPriceExp(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./test-data/depth-msg-price-exp.json")
+	assert.NoError(t, err)
+
+	bitfinexDepthUpdateInKafka := DepthStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "bitfinex@tBATBTC@depth@1551267404491@0@51200.00000000@3@0.00000010@1",
+		GetDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
 }

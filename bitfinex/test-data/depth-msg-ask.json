@@ -1,0 +1,18 @@
+{
+    "exchange": "bitfinex",
+    "stream": "tZECBTC@depth",
+    "symbol": "tZECBTC",
+    "event_time": 1551267598182,
+    "received_time": 1551267598182,
+    "raw_message": {
+        "Action": 0,
+        "Amount": 3.99030282,
+        "AmountJsNum": -3.99030282,
+        "Count": 4,
+        "ID": 0,
+        "Price": 0.013644,
+        "PriceJsNum": 0.013644,
+        "Side": 2,
+        "Symbol": "tZECBTC"
+    }
+}

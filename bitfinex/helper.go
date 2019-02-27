@@ -45,12 +45,16 @@ func GetTradeMessagePrimaryKey(trade *TradeStreamMessageInKafka) string {
 }
 
 // GetDepthMessagePrimaryKey gets a concatenated string that forms from the message fields which identify the depth message uniquely
-func GetDepthMessagePrimaryKey(trade *DepthStreamMessageInKafka) string {
+func GetDepthMessagePrimaryKey(depth *DepthStreamMessageInKafka) string {
 	fields := make([]string, 0)
-	fields = append(fields, trade.Exchange)
-	fields = append(fields, trade.Stream)
-	fields = append(fields, strconv.FormatInt(trade.EventTime, 10))
-	fields = append(fields, strconv.FormatInt(trade.RawMessage.ID, 10))
+	fields = append(fields, depth.Exchange)
+	fields = append(fields, depth.Stream)
+	fields = append(fields, strconv.FormatInt(depth.EventTime, 10))
+	fields = append(fields, strconv.FormatInt(depth.RawMessage.ID, 10))
+	fields = append(fields, fmt.Sprintf("%.8f", depth.RawMessage.Amount))
+	fields = append(fields, strconv.FormatInt(depth.RawMessage.Count, 10))
+	fields = append(fields, fmt.Sprintf("%.8f", depth.RawMessage.Price))
+	fields = append(fields, strconv.FormatInt(int64(depth.RawMessage.Side), 10))
 	return strings.Join(fields, "@")
 }
 
@@ -109,6 +113,12 @@ func KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(kafkaDepth *DepthStreamMes
 // KafkaBitfinexTradeToAPITrade converts binance trade from Kafka message to APITrade format
 func KafkaBitfinexTradeToAPITrade(kafkaTrade *TradeStreamMessageInKafka) (*types.APITrade, error) {
 
+	side := 0
+	if kafkaTrade.RawMessage.Side == bitfinex.Bid {
+		side = 1
+	} else if kafkaTrade.RawMessage.Side == bitfinex.Ask {
+		side = -1
+	}
 	apiTrade := types.APITrade{
 		Exchange:      kafkaTrade.Exchange,
 		Type:          "trade",
@@ -121,6 +131,7 @@ func KafkaBitfinexTradeToAPITrade(kafkaTrade *TradeStreamMessageInKafka) (*types
 		SellerOrderID: -1,
 		BuyerOrderID:  -1,
 		Price:         fmt.Sprintf("%.8f", kafkaTrade.RawMessage.Price),
-		Quantity:      fmt.Sprintf("%.8f", kafkaTrade.RawMessage.Amount)}
+		Quantity:      fmt.Sprintf("%.8f", kafkaTrade.RawMessage.Amount),
+		Side:          side}
 	return &apiTrade, nil
 }

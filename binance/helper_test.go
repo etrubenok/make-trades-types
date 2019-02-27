@@ -82,7 +82,8 @@ func TestKafkaBinanceTradeToAPITrade(t *testing.T) {
 		SellerOrderID: 18779843,
 		BuyerOrderID:  18779842,
 		Price:         "63.70000000",
-		Quantity:      "0.16400000"}
+		Quantity:      "0.16400000",
+		Side:          0}
 
 	apiTrade, err := KafkaBinanceTradeToAPITrade(&binanceTradeInKafka)
 	if assert.NoError(t, err) {
