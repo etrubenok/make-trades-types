@@ -1,0 +1,15 @@
+{
+    "exchange": "binance",
+    "type": "trade",
+    "symbol": "binance-arnbtc",
+    "received_time": 1551271564641,
+    "trade_id": 11138878,
+    "event_time": 1551271564560,
+    "trade_time": 1551271564555,
+    "market_maker": true,
+    "seller_order_id": 63375104,
+    "buyer_order_id": 63375100,
+    "price": "0.00007809",
+    "quantity": "71.00000000",
+    "side": -1
+}

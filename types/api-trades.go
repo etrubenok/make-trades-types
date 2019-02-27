@@ -14,5 +14,5 @@ type APITrade struct {
 	BuyerOrderID  int64  `json:"buyer_order_id"`
 	Price         string `json:"price"`
 	Quantity      string `json:"quantity"`
-	Side          int    `json:"side"`
+	Side          int    `json:"side,omitempty"`
 }
