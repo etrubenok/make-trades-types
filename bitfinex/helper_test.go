@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	bitfinexOrig "github.com/bitfinexcom/bitfinex-api-go/v2"
+	bitfinexOrig "github.com/etrubenok/bitfinex-api-go/v2"
 	"github.com/etrubenok/make-trades-types/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -203,7 +203,7 @@ func TestGetDepthMessagePrimaryKey(t *testing.T) {
 	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
 	assert.NoError(t, err)
 
-	assert.Equal(t, "bitfinex@tZECBTC@depth@1551267598182@0@3.99030282@4@0.01364400@2",
+	assert.Equal(t, "bitfinex@tZECBTC@depth@0@3.99030282@4@0.01364400@2",
 		GetDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
 }
 
@@ -215,6 +215,6 @@ func TestGetDepthMessagePrimaryKeyPriceExp(t *testing.T) {
 	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
 	assert.NoError(t, err)
 
-	assert.Equal(t, "bitfinex@tBATBTC@depth@1551267404491@0@51200.00000000@3@0.00000010@1",
+	assert.Equal(t, "bitfinex@tBATBTC@depth@0@51200.00000000@3@0.00000010@1",
 		GetDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
 }

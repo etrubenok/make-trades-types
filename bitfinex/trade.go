@@ -1,6 +1,6 @@
 package bitfinex
 
-import bitfinex "github.com/bitfinexcom/bitfinex-api-go/v2"
+import bitfinex "github.com/etrubenok/bitfinex-api-go/v2"
 
 // RawMessageTradeType is a type for Bitfinex raw mnessage
 type RawMessageTradeType struct {
@@ -20,4 +20,14 @@ type TradeStreamMessageInKafka struct {
 	EventTime    int64          `json:"event_time"`
 	ReceivedTime int64          `json:"received_time"`
 	RawMessage   bitfinex.Trade `json:"raw_message"`
+}
+
+// FundingTradeStreamMessageInKafka is a type of Binance stream trade messages
+type FundingTradeStreamMessageInKafka struct {
+	Exchange     string                `json:"exchange"`
+	Stream       string                `json:"stream"`
+	Symbol       string                `json:"symbol"`
+	EventTime    int64                 `json:"event_time"`
+	ReceivedTime int64                 `json:"received_time"`
+	RawMessage   bitfinex.FundingTrade `json:"raw_message"`
 }

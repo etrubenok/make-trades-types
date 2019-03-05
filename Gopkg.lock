@@ -2,20 +2,20 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:d4d8be2269dcf77751648964b28759ae17ef242dcb2ce2a9a2fae9f90c68ae2e"
-  name = "github.com/bitfinexcom/bitfinex-api-go"
-  packages = ["v2"]
-  pruneopts = "UT"
-  revision = "286a8310973258e9b33e66475f38697f83e813c0"
-
-[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   pruneopts = "UT"
   revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
   version = "v1.1.1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:dd67c8d55222407adf310b7c939788eb69559bff7f0f68d4b7f967c1a71ab0f7"
+  name = "github.com/etrubenok/bitfinex-api-go"
+  packages = ["v2"]
+  pruneopts = "UT"
+  revision = "546cf87d2580984be384cf41e159c055f9a8d2d3"
 
 [[projects]]
   branch = "master"
@@ -45,7 +45,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/bitfinexcom/bitfinex-api-go/v2",
+    "github.com/etrubenok/bitfinex-api-go/v2",
     "github.com/golang/glog",
     "github.com/stretchr/testify/assert",
   ]

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	bitfinex "github.com/bitfinexcom/bitfinex-api-go/v2"
+	bitfinex "github.com/etrubenok/bitfinex-api-go/v2"
 	"github.com/etrubenok/make-trades-types/types"
 	"github.com/golang/glog"
 )
@@ -18,6 +18,17 @@ func GetTradeStreamMessage(message []byte) (*TradeStreamMessageInKafka, error) {
 	err := json.Unmarshal(message, &msg)
 	if err != nil {
 		glog.Errorf("bitfinex.GetTradeStreamMessage: cannot convert message %s into TradeStreamMessageInKafka due to error %s", message, err)
+		return nil, err
+	}
+	return &msg, nil
+}
+
+// GetFundingTradeStreamMessage converts a message in the string format into TradeStreamMessageInKafka
+func GetFundingTradeStreamMessage(message []byte) (*FundingTradeStreamMessageInKafka, error) {
+	msg := FundingTradeStreamMessageInKafka{}
+	err := json.Unmarshal(message, &msg)
+	if err != nil {
+		glog.Errorf("bitfinex.GetFundingTradeStreamMessage: cannot convert message %s into FundingTradeStreamMessageInKafka due to error %s", message, err)
 		return nil, err
 	}
 	return &msg, nil
@@ -34,6 +45,17 @@ func GetDepthStreamMessage(message []byte) (*DepthStreamMessageInKafka, error) {
 	return &msg, nil
 }
 
+// GetFundingDepthStreamMessage converts a message in the string format into FundingDepthStreamMessageInKafka
+func GetFundingDepthStreamMessage(message []byte) (*FundingDepthStreamMessageInKafka, error) {
+	msg := FundingDepthStreamMessageInKafka{}
+	err := json.Unmarshal(message, &msg)
+	if err != nil {
+		glog.Errorf("GetFundingDepthStreamMessage: cannot convert message %s into FundingDepthStreamMessageInKafka due to error %s", message, err)
+		return nil, err
+	}
+	return &msg, nil
+}
+
 // GetTradeMessagePrimaryKey gets a concatenated string that forms from the message fields which identify the trade uniquely
 func GetTradeMessagePrimaryKey(trade *TradeStreamMessageInKafka) string {
 	fields := make([]string, 0)
@@ -44,16 +66,37 @@ func GetTradeMessagePrimaryKey(trade *TradeStreamMessageInKafka) string {
 	return strings.Join(fields, "@")
 }
 
+// GetFundingTradeMessagePrimaryKey gets a concatenated string that forms from the message fields which identify the trade uniquely
+func GetFundingTradeMessagePrimaryKey(trade *FundingTradeStreamMessageInKafka) string {
+	fields := make([]string, 0)
+	fields = append(fields, trade.Exchange)
+	fields = append(fields, trade.Stream)
+	fields = append(fields, strconv.FormatInt(trade.RawMessage.ID, 10))
+	return strings.Join(fields, "@")
+}
+
 // GetDepthMessagePrimaryKey gets a concatenated string that forms from the message fields which identify the depth message uniquely
 func GetDepthMessagePrimaryKey(depth *DepthStreamMessageInKafka) string {
 	fields := make([]string, 0)
 	fields = append(fields, depth.Exchange)
 	fields = append(fields, depth.Stream)
-	fields = append(fields, strconv.FormatInt(depth.EventTime, 10))
 	fields = append(fields, strconv.FormatInt(depth.RawMessage.ID, 10))
 	fields = append(fields, fmt.Sprintf("%.8f", depth.RawMessage.Amount))
 	fields = append(fields, strconv.FormatInt(depth.RawMessage.Count, 10))
 	fields = append(fields, fmt.Sprintf("%.8f", depth.RawMessage.Price))
+	fields = append(fields, strconv.FormatInt(int64(depth.RawMessage.Side), 10))
+	return strings.Join(fields, "@")
+}
+
+// GetFundingDepthMessagePrimaryKey gets a concatenated string that forms from the message fields which identify the depth message uniquely
+func GetFundingDepthMessagePrimaryKey(depth *FundingDepthStreamMessageInKafka) string {
+	fields := make([]string, 0)
+	fields = append(fields, depth.Exchange)
+	fields = append(fields, depth.Stream)
+	fields = append(fields, strconv.FormatInt(depth.RawMessage.ID, 10))
+	fields = append(fields, fmt.Sprintf("%.8f", depth.RawMessage.Amount))
+	fields = append(fields, strconv.FormatInt(depth.RawMessage.Count, 10))
+	fields = append(fields, fmt.Sprintf("%.8f", depth.RawMessage.Rate))
 	fields = append(fields, strconv.FormatInt(int64(depth.RawMessage.Side), 10))
 	return strings.Join(fields, "@")
 }
