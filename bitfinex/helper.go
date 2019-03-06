@@ -153,6 +153,50 @@ func KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(kafkaDepth *DepthStreamMes
 	return &apiOrderBookUpdate, nil
 }
 
+// KafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate converts Bitfinex depth stream message into APIOrderBookUpdate format
+func KafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate(kafkaDepth *FundingDepthStreamMessageInKafka) (*types.APIFundingOrderBookUpdate, error) {
+	bids := make([]types.APIFundingOrderBookPriceLevel, 0)
+	asks := make([]types.APIFundingOrderBookPriceLevel, 0)
+	if kafkaDepth.RawMessage.Side == bitfinex.Bid {
+		if kafkaDepth.RawMessage.Count == 0 {
+			bids = append(bids, types.APIFundingOrderBookPriceLevel{
+				Rate:     fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Rate),
+				Period:   kafkaDepth.RawMessage.Period,
+				Quantity: fmt.Sprintf("%.8f", 0.0)})
+		} else {
+			bids = append(bids, types.APIFundingOrderBookPriceLevel{
+				Rate:     fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Rate),
+				Period:   kafkaDepth.RawMessage.Period,
+				Quantity: fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Amount)})
+		}
+	} else if kafkaDepth.RawMessage.Side == bitfinex.Ask {
+		if kafkaDepth.RawMessage.Count == 0 {
+			asks = append(asks, types.APIFundingOrderBookPriceLevel{
+				Rate:     fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Rate),
+				Period:   kafkaDepth.RawMessage.Period,
+				Quantity: fmt.Sprintf("%.8f", 0.0)})
+		} else {
+			asks = append(asks, types.APIFundingOrderBookPriceLevel{
+				Rate:     fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Rate),
+				Period:   kafkaDepth.RawMessage.Period,
+				Quantity: fmt.Sprintf("%.8f", kafkaDepth.RawMessage.Amount)})
+		}
+	}
+
+	apiFundingOrderBookUpdate := types.APIFundingOrderBookUpdate{
+		Exchange:      kafkaDepth.Exchange,
+		Type:          "forderbook",
+		Symbol:        fmt.Sprintf("%s-%s", kafkaDepth.Exchange, kafkaDepth.Symbol),
+		Received:      kafkaDepth.ReceivedTime,
+		FirstUpdateID: kafkaDepth.RawMessage.ID,
+		EventTime:     kafkaDepth.EventTime,
+		LastUpdateID:  kafkaDepth.RawMessage.ID,
+		Asks:          asks,
+		Bids:          bids,
+	}
+	return &apiFundingOrderBookUpdate, nil
+}
+
 // KafkaBitfinexTradeToAPITrade converts binance trade from Kafka message to APITrade format
 func KafkaBitfinexTradeToAPITrade(kafkaTrade *TradeStreamMessageInKafka) (*types.APITrade, error) {
 
@@ -175,6 +219,32 @@ func KafkaBitfinexTradeToAPITrade(kafkaTrade *TradeStreamMessageInKafka) (*types
 		BuyerOrderID:  -1,
 		Price:         fmt.Sprintf("%.8f", kafkaTrade.RawMessage.Price),
 		Quantity:      fmt.Sprintf("%.8f", kafkaTrade.RawMessage.Amount),
+		Side:          side}
+	return &apiTrade, nil
+}
+
+// KafkaBitfinexFundingTradeToAPIFundingTrade does cool things
+func KafkaBitfinexFundingTradeToAPIFundingTrade(kafkaFundingTrade *FundingTradeStreamMessageInKafka) (*types.APIFundingTrade, error) {
+	side := 0
+	if kafkaFundingTrade.RawMessage.Side == bitfinex.Bid {
+		side = -1
+	} else if kafkaFundingTrade.RawMessage.Side == bitfinex.Ask {
+		side = 1
+	}
+	apiTrade := types.APIFundingTrade{
+		Exchange:      kafkaFundingTrade.Exchange,
+		Type:          "ftrade",
+		Symbol:        fmt.Sprintf("%s-%s", kafkaFundingTrade.Exchange, kafkaFundingTrade.Symbol),
+		Received:      kafkaFundingTrade.ReceivedTime,
+		TradeID:       kafkaFundingTrade.RawMessage.ID,
+		EventTime:     kafkaFundingTrade.RawMessage.MTSCreated,
+		TradeTime:     kafkaFundingTrade.RawMessage.MTSCreated,
+		MarketMaker:   false,
+		SellerOrderID: -1,
+		BuyerOrderID:  -1,
+		Rate:          fmt.Sprintf("%.8f", kafkaFundingTrade.RawMessage.Rate),
+		Period:        kafkaFundingTrade.RawMessage.Period,
+		Quantity:      fmt.Sprintf("%.8f", kafkaFundingTrade.RawMessage.Amount),
 		Side:          side}
 	return &apiTrade, nil
 }

@@ -11,11 +11,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:dd67c8d55222407adf310b7c939788eb69559bff7f0f68d4b7f967c1a71ab0f7"
+  digest = "1:80f3a0c52ebb85b1a7bcff301c0ef98b204b15adb05194353f099d5f77e555d5"
   name = "github.com/etrubenok/bitfinex-api-go"
   packages = ["v2"]
   pruneopts = "UT"
-  revision = "546cf87d2580984be384cf41e159c055f9a8d2d3"
+  revision = "1a097356785b107eb60396d4604f4ba41478509d"
 
 [[projects]]
   branch = "master"

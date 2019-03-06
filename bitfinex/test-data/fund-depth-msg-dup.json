@@ -1,0 +1,19 @@
+{
+  "exchange": "bitfinex",
+  "stream": "fXRP@fdepth",
+  "symbol": "fXRP",
+  "event_time": 1551831768800,
+  "received_time": 1551831768800,
+  "raw_message": {
+      "Action": 0,
+      "Amount": 2452.784223,
+      "AmountJsNum": 2452.784223,
+      "Count": 5,
+      "ID": 0,
+      "Period": 2,
+      "Rate": 0.0001,
+      "RateJsNum": 0.0001,
+      "Side": 2,
+      "Symbol": "fXRP"
+  }
+}

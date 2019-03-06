@@ -1,0 +1,19 @@
+{
+    "exchange": "bitfinex",
+    "stream": "fDSH@fdepth",
+    "symbol": "fDSH",
+    "event_time": 1551831253248,
+    "received_time": 1551831253248,
+    "raw_message": {
+        "Action": 1,
+        "Amount": 1,
+        "AmountJsNum": 1,
+        "Count": 0,
+        "ID": 0,
+        "Period": 30,
+        "Rate": 0.0012,
+        "RateJsNum": 0.0012,
+        "Side": 2,
+        "Symbol": "fDSH"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "exchange": "bitfinex",
+    "stream": "fBTC@ftrade",
+    "symbol": "fBTC",
+    "event_time": 1551840570000,
+    "received_time": 1551840569673,
+    "raw_message": {
+        "Amount": 0.23744,
+        "ID": 104413077,
+        "MTSCreated": 1551840570000,
+        "Period": 10,
+        "Rate": 0.0000041,
+        "Side": 1,
+        "Symbol": "fBTC"
+    }
+}

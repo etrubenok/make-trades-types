@@ -137,6 +137,32 @@ func TestKafkaBitfinexOrderBookUpdateToAPIOrderBookUpdateAsk(t *testing.T) {
 		assert.Equal(t, &expectedAPIOrderBookUpdate, apiOrdeBookUpdate)
 	}
 }
+
+func TestKafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./test-data/fund-depth-msg.json")
+	assert.NoError(t, err)
+
+	bitfinexDepthUpdateInKafka := FundingDepthStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
+	assert.NoError(t, err)
+
+	expectedAPIOrderBookUpdate := types.APIFundingOrderBookUpdate{
+		Exchange:      "bitfinex",
+		Type:          "forderbook",
+		Symbol:        "bitfinex-fXRP",
+		Received:      1551831768843,
+		FirstUpdateID: 0,
+		EventTime:     1551831768843,
+		LastUpdateID:  0,
+		Asks:          []types.APIFundingOrderBookPriceLevel{types.APIFundingOrderBookPriceLevel{Rate: "0.00010000", Period: 2, Quantity: "2452.78422300"}},
+		Bids:          []types.APIFundingOrderBookPriceLevel{}}
+
+	apiOrdeBookUpdate, err := KafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate(&bitfinexDepthUpdateInKafka)
+	if assert.NoError(t, err) {
+		assert.Equal(t, &expectedAPIOrderBookUpdate, apiOrdeBookUpdate)
+	}
+}
+
 func TestKafkaBitfinexTradeToAPITrade(t *testing.T) {
 	msgStr, err := ioutil.ReadFile("./test-data/trade-msg.json")
 	assert.NoError(t, err)
@@ -217,4 +243,90 @@ func TestGetDepthMessagePrimaryKeyPriceExp(t *testing.T) {
 
 	assert.Equal(t, "bitfinex@tBATBTC@depth@0@51200.00000000@3@0.00000010@1",
 		GetDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
+}
+
+func TestGetFundingDepthMessagePrimaryKey(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./test-data/fund-depth-msg.json")
+	assert.NoError(t, err)
+
+	bitfinexDepthUpdateInKafka := FundingDepthStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "bitfinex@fXRP@fdepth@0@2452.78422300@5@0.00010000@2",
+		GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
+}
+
+func TestGetFundingDepthMessagePrimaryKeyTheSame(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./test-data/fund-depth-msg.json")
+	assert.NoError(t, err)
+
+	bitfinexDepthUpdateInKafka := FundingDepthStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
+	assert.NoError(t, err)
+
+	msgStr2, err := ioutil.ReadFile("./test-data/fund-depth-msg-dup.json")
+	assert.NoError(t, err)
+
+	bitfinexDepthUpdateInKafka2 := FundingDepthStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr2, &bitfinexDepthUpdateInKafka2)
+	assert.NoError(t, err)
+
+	assert.Equal(t, GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka),
+		GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka2))
+
+	hash, err := GetKeyHash(GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
+	assert.NoError(t, err)
+
+	hash2, err := GetKeyHash(GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka2))
+	assert.NoError(t, err)
+
+	assert.Equal(t, hash,
+		hash2)
+}
+
+func TestGetKeyHash(t *testing.T) {
+	msgStr, err := ioutil.ReadFile("./test-data/fund-depth-msg-2.json")
+	assert.NoError(t, err)
+
+	bitfinexDepthUpdateInKafka := FundingDepthStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "bitfinex@fDSH@fdepth@0@1.00000000@0@0.00120000@2",
+		GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
+
+	hash, err := GetKeyHash(GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka) + "@v5")
+	assert.NoError(t, err)
+	assert.Equal(t, "4c735f899c853a87b0d30fb14411e07220f04fa9", hash)
+}
+
+func TestKafkaBitfinexFundingTradeToAPIFundingTrade(t *testing.T) {
+
+	msgStr, err := ioutil.ReadFile("./test-data/fund-trade-msg.json")
+	assert.NoError(t, err)
+
+	bitfinexTradeUpdateInKafka := FundingTradeStreamMessageInKafka{}
+	err = json.Unmarshal(msgStr, &bitfinexTradeUpdateInKafka)
+
+	expectedAPIFundingTrade := types.APIFundingTrade{
+		Exchange:      "bitfinex",
+		Type:          "ftrade",
+		Symbol:        "bitfinex-fBTC",
+		Received:      1551840569673,
+		TradeID:       104413077,
+		EventTime:     1551840570000,
+		TradeTime:     1551840570000,
+		MarketMaker:   false,
+		SellerOrderID: -1,
+		BuyerOrderID:  -1,
+		Rate:          "0.00000410",
+		Period:        10,
+		Quantity:      "0.23744000",
+		Side:          -1}
+
+	apiFundingTrade, err := KafkaBitfinexFundingTradeToAPIFundingTrade(&bitfinexTradeUpdateInKafka)
+	if assert.NoError(t, err) {
+		assert.Equal(t, &expectedAPIFundingTrade, apiFundingTrade)
+	}
 }
