@@ -41,7 +41,7 @@ func TestGetTradeMessagePrimaryKey(t *testing.T) {
 	assert.NoError(t, err)
 
 	key := GetTradeMessagePrimaryKey(msg)
-	assert.Equal(t, "binance@btcusdt@trade@1547119839773@93684015", key)
+	assert.Equal(t, "binance@btcusdt@trade@btcusdt@1547119839773@93684015", key)
 }
 
 func TestGetDepthMessagePrimaryKey(t *testing.T) {
@@ -52,14 +52,14 @@ func TestGetDepthMessagePrimaryKey(t *testing.T) {
 	assert.NoError(t, err)
 
 	key := GetDepthMessagePrimaryKey(msg)
-	assert.Equal(t, "binance@ppteth@depth@1547119839095@49518600", key)
+	assert.Equal(t, "binance@ppteth@depth@ppteth@1547119839095@49518600", key)
 }
 
 func TestGetHashKey(t *testing.T) {
-	h, err := GetKeyHash("binance@btcusdt@trade@1547119839773@93684015")
+	h, err := GetKeyHash("binance@btcusdt@trade@btcusdt@1547119839773@93684015")
 	assert.NoError(t, err)
 
-	assert.Equal(t, "9f875ee4585152c34a56c23a29df253104b60898", h)
+	assert.Equal(t, "78be7ceb222a0dc7afaa0ab4b792beb6dbd6c8cd", h)
 }
 
 func TestKafkaBinanceTradeToAPITrade(t *testing.T) {

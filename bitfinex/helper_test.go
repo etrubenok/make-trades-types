@@ -229,7 +229,7 @@ func TestGetDepthMessagePrimaryKey(t *testing.T) {
 	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
 	assert.NoError(t, err)
 
-	assert.Equal(t, "bitfinex@tZECBTC@depth@0@3.99030282@4@0.01364400@2",
+	assert.Equal(t, "bitfinex@tZECBTC@depth@tZECBTC@0@3.99030282@4@0.01364400@2",
 		GetDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
 }
 
@@ -241,7 +241,7 @@ func TestGetDepthMessagePrimaryKeyPriceExp(t *testing.T) {
 	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
 	assert.NoError(t, err)
 
-	assert.Equal(t, "bitfinex@tBATBTC@depth@0@51200.00000000@3@0.00000010@1",
+	assert.Equal(t, "bitfinex@tBATBTC@depth@tBATBTC@0@51200.00000000@3@0.00000010@1",
 		GetDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
 }
 
@@ -253,7 +253,7 @@ func TestGetFundingDepthMessagePrimaryKey(t *testing.T) {
 	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
 	assert.NoError(t, err)
 
-	assert.Equal(t, "bitfinex@fXRP@fdepth@0@2452.78422300@5@0.00010000@2",
+	assert.Equal(t, "bitfinex@fXRP@fdepth@fXRP@0@2452.78422300@5@0.00010000@2",
 		GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
 }
 
@@ -293,12 +293,12 @@ func TestGetKeyHash(t *testing.T) {
 	err = json.Unmarshal(msgStr, &bitfinexDepthUpdateInKafka)
 	assert.NoError(t, err)
 
-	assert.Equal(t, "bitfinex@fDSH@fdepth@0@1.00000000@0@0.00120000@2",
+	assert.Equal(t, "bitfinex@fDSH@fdepth@fDSH@0@1.00000000@0@0.00120000@2",
 		GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka))
 
 	hash, err := GetKeyHash(GetFundingDepthMessagePrimaryKey(&bitfinexDepthUpdateInKafka) + "@v5")
 	assert.NoError(t, err)
-	assert.Equal(t, "4c735f899c853a87b0d30fb14411e07220f04fa9", hash)
+	assert.Equal(t, "3d81661f305836536d3726c99686a5d40dd99ca1", hash)
 }
 
 func TestKafkaBitfinexFundingTradeToAPIFundingTrade(t *testing.T) {
