@@ -114,7 +114,7 @@ func GetKeyHash(key string) (string, error) {
 }
 
 // KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate converts Bitfinex depth stream message into APIOrderBookUpdate format
-func KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(kafkaDepth *DepthStreamMessageInKafka) (*types.APIOrderBookUpdate, error) {
+func KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(kafkaDepth *DepthStreamMessageInKafka, apiStreamType string) (*types.APIOrderBookUpdate, error) {
 	bids := make([]types.APIOrderBookPriceLevel, 0)
 	asks := make([]types.APIOrderBookPriceLevel, 0)
 	if kafkaDepth.RawMessage.Side == bitfinex.Bid {
@@ -141,7 +141,7 @@ func KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(kafkaDepth *DepthStreamMes
 
 	apiOrderBookUpdate := types.APIOrderBookUpdate{
 		Exchange:      kafkaDepth.Exchange,
-		Type:          "orderbook",
+		Type:          apiStreamType,
 		Symbol:        fmt.Sprintf("%s-%s", kafkaDepth.Exchange, kafkaDepth.Symbol),
 		Received:      kafkaDepth.ReceivedTime,
 		FirstUpdateID: kafkaDepth.RawMessage.ID,
@@ -154,7 +154,7 @@ func KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(kafkaDepth *DepthStreamMes
 }
 
 // KafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate converts Bitfinex depth stream message into APIOrderBookUpdate format
-func KafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate(kafkaDepth *FundingDepthStreamMessageInKafka) (*types.APIFundingOrderBookUpdate, error) {
+func KafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate(kafkaDepth *FundingDepthStreamMessageInKafka, apiStreamType string) (*types.APIFundingOrderBookUpdate, error) {
 	bids := make([]types.APIFundingOrderBookPriceLevel, 0)
 	asks := make([]types.APIFundingOrderBookPriceLevel, 0)
 	if kafkaDepth.RawMessage.Side == bitfinex.Bid {
@@ -185,7 +185,7 @@ func KafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate(kafkaDepth *
 
 	apiFundingOrderBookUpdate := types.APIFundingOrderBookUpdate{
 		Exchange:      kafkaDepth.Exchange,
-		Type:          "forderbook",
+		Type:          apiStreamType,
 		Symbol:        fmt.Sprintf("%s-%s", kafkaDepth.Exchange, kafkaDepth.Symbol),
 		Received:      kafkaDepth.ReceivedTime,
 		FirstUpdateID: kafkaDepth.RawMessage.ID,

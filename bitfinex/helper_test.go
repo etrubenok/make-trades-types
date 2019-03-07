@@ -57,7 +57,7 @@ func TestKafkaBitfinexOrderBookUpdateToAPIOrderBook(t *testing.T) {
 		Asks:          []types.APIOrderBookPriceLevel{types.APIOrderBookPriceLevel{Price: "3.74750000", Quantity: "0.00000000"}},
 		Bids:          []types.APIOrderBookPriceLevel{}}
 
-	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka)
+	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka, "orderbook")
 	if assert.NoError(t, err) {
 		assert.Equal(t, &expectedAPIOrderBookUpdate, apiOrdeBookUpdate)
 	}
@@ -82,7 +82,7 @@ func TestKafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(t *testing.T) {
 		Asks:          []types.APIOrderBookPriceLevel{},
 		Bids:          []types.APIOrderBookPriceLevel{types.APIOrderBookPriceLevel{Price: "3.45310000", Quantity: "1300.00000000"}}}
 
-	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka)
+	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka, "orderbook")
 	if assert.NoError(t, err) {
 		assert.Equal(t, &expectedAPIOrderBookUpdate, apiOrdeBookUpdate)
 	}
@@ -107,7 +107,7 @@ func TestKafkaBitfinexOrderBookUpdateToAPIOrderBookUpdateExp(t *testing.T) {
 		Asks:          []types.APIOrderBookPriceLevel{},
 		Bids:          []types.APIOrderBookPriceLevel{types.APIOrderBookPriceLevel{Price: "0.00000010", Quantity: "51200.00000000"}}}
 
-	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka)
+	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka, "orderbook")
 	if assert.NoError(t, err) {
 		assert.Equal(t, &expectedAPIOrderBookUpdate, apiOrdeBookUpdate)
 	}
@@ -132,7 +132,7 @@ func TestKafkaBitfinexOrderBookUpdateToAPIOrderBookUpdateAsk(t *testing.T) {
 		Asks:          []types.APIOrderBookPriceLevel{types.APIOrderBookPriceLevel{Price: "0.01364400", Quantity: "3.99030282"}},
 		Bids:          []types.APIOrderBookPriceLevel{}}
 
-	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka)
+	apiOrdeBookUpdate, err := KafkaBitfinexOrderBookUpdateToAPIOrderBookUpdate(&bitfinexDepthUpdateInKafka, "orderbook")
 	if assert.NoError(t, err) {
 		assert.Equal(t, &expectedAPIOrderBookUpdate, apiOrdeBookUpdate)
 	}
@@ -157,7 +157,7 @@ func TestKafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate(t *testi
 		Asks:          []types.APIFundingOrderBookPriceLevel{types.APIFundingOrderBookPriceLevel{Rate: "0.00010000", Period: 2, Quantity: "2452.78422300"}},
 		Bids:          []types.APIFundingOrderBookPriceLevel{}}
 
-	apiOrdeBookUpdate, err := KafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate(&bitfinexDepthUpdateInKafka)
+	apiOrdeBookUpdate, err := KafkaBitfinexFundingOrderBookUpdateToAPIFundingOrderBookUpdate(&bitfinexDepthUpdateInKafka, "forderbook")
 	if assert.NoError(t, err) {
 		assert.Equal(t, &expectedAPIOrderBookUpdate, apiOrdeBookUpdate)
 	}
